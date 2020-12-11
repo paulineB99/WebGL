@@ -85,19 +85,19 @@ function initBuffers() {
 			N4 = setPointFromAngles(1.0,th1,ph2);
 
 			vertices.push(P1[0], P1[1], P1[2]);
-			normals.push(N1[0],N1[1],N1[2]);
+			normals.push( N1[0], N1[1], N1[2]);
 			vertices.push(P2[0], P2[1], P2[2]);
-			normals.push(N2[0],N2[1],N2[2]);
+			normals.push( N2[0], N2[1], N2[2]);
 			vertices.push(P4[0], P4[1], P4[2]);
-			normals.push(N4[0],N4[1],N4[2]);
+			normals.push( N4[0], N4[1], N4[2]);
 			colors.push(0,1,0, 0,1,0, 0,1,0);
 
 			vertices.push(P2[0], P2[1], P2[2]);
-			normals.push(N2[0],N2[1],N2[2]);
+			normals.push( N2[0], N2[1], N2[2]);
 			vertices.push(P3[0], P3[1], P3[2]);
-			normals.push(N3[0],N3[1],N3[2]);
+			normals.push( N3[0], N3[1], N3[2]);
 			vertices.push(P4[0], P4[1], P4[2]);
-			normals.push(N4[0],N4[1],N4[2]);
+			normals.push( N4[0], N4[1], N4[2]);
 			colors.push(0,0,1, 0,0,1, 0,0,1);
 		}
 	}
@@ -112,13 +112,13 @@ function initBuffers() {
 	gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
 	colorBuffer.itemSize = 3;
-	colorBuffer.numItems = vertices.length/3;
+	colorBuffer.numItems = colors.length/3;
 
 	normalBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
 	normalBuffer.itemSize = 3;
-	normalBuffer.numItems = vertices.length/3;
+	normalBuffer.numItems = normals.length/3;
 }
 
 // =====================================================
@@ -186,6 +186,7 @@ function initShaders(vShaderTxt,fShaderTxt) {
 
 	shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
 	shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+	shaderProgram.rMatrixUniform = gl.getUniformLocation(shaderProgram, "uRMatrix");
 	
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 	gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute,
@@ -197,7 +198,7 @@ function initShaders(vShaderTxt,fShaderTxt) {
 		  
 	gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
 	gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute,
-	normalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+	      normalBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
 }
 
@@ -207,6 +208,7 @@ function setMatrixUniforms() {
 	if(shaderProgram != null) {
 		gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
 		gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
+		gl.uniformMatrix4fv(shaderProgram.rMatrixUniform, false, objMatrix);
 	}
 }
 
