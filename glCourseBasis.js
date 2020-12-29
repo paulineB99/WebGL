@@ -11,8 +11,8 @@ var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
 var objMatrix = mat4.create();
 mat4.identity(objMatrix);
-
-
+var color1, color2 = [1,0,0];
+var SRCPower = [];
 // =====================================================
 function webGLStart() {
 	var canvas = document.getElementById("WebGL-test");
@@ -21,6 +21,8 @@ function webGLStart() {
 	document.onmousemove = handleMouseMove;
 
 	initGL(canvas);
+	buttonColors();
+	slidePower();
 	initBuffers();
 	loadShaders('shader');
 
@@ -46,6 +48,42 @@ function initGL(canvas)
 
 // =====================================================
 
+function slidePower() {
+	var sliderPower = document.getElementById("powerRange");
+	SRCPower = [sliderPower.value, sliderPower.value, sliderPower.value];
+	sliderPower.oninput = function() {
+		SRCPower = [this.value, this.value, this.value];
+	}
+	console.log(sliderPower.value);
+	
+}
+function buttonColors() {
+	if(document.getElementById("red1").checked) {
+		color1 = [1,0,0];
+	}else if(document.getElementById("green1").checked) {
+		color1 = [0,1,0];
+	}else if(document.getElementById("blue1").checked) {
+		color1 = [0,0,1];
+	}
+	if(document.getElementById("red2").checked) {
+		color2 = [1,0,0];
+	}else if(document.getElementById("green2").checked) {
+		color2 = [0,1,0];
+	}else if(document.getElementById("blue2").checked) {
+		color2 = [0,0,1];
+	}
+	initBuffers();
+}
+
+function refresh() {
+	buttonColors();
+	slidePower();
+	initBuffers();
+	loadShaders('shader');
+}
+
+// =====================================================
+
 function setPointFromAngles(r,th, ph){
 	ct = Math.cos(th);
 	st = Math.sin(th);
@@ -58,7 +96,7 @@ function setPointFromAngles(r,th, ph){
 // =====================================================
 
 function initBuffers() {
-	NB = 10;
+	NB = 4;
 	radius = 0.5;
 	dTh = Math.PI / NB;
 	dPh =dTh;
@@ -66,6 +104,7 @@ function initBuffers() {
 	vertices = [];
 	colors = [];
 	normals = [];
+	power = [];
 	for(var i=0; i<NB; i++){
 		var th1 = i*dTh;
 		var th2 = th1 + dTh;
@@ -90,7 +129,10 @@ function initBuffers() {
 			normals.push( N2[0], N2[1], N2[2]);
 			vertices.push(P4[0], P4[1], P4[2]);
 			normals.push( N4[0], N4[1], N4[2]);
-			colors.push(0,1,0, 0,1,0, 0,1,0);
+			colors.push(color1[0], color1[1], color1[2],
+						color1[0], color1[1], color1[2],
+						color1[0], color1[1], color1[2]
+				);
 
 			vertices.push(P2[0], P2[1], P2[2]);
 			normals.push( N2[0], N2[1], N2[2]);
@@ -98,7 +140,18 @@ function initBuffers() {
 			normals.push( N3[0], N3[1], N3[2]);
 			vertices.push(P4[0], P4[1], P4[2]);
 			normals.push( N4[0], N4[1], N4[2]);
-			colors.push(0,0,1, 0,0,1, 0,0,1);
+			colors.push(color2[0], color2[1], color2[2],
+						color2[0], color2[1], color2[2],
+						color2[0], color2[1], color2[2]
+				);
+			
+			power.push(SRCPower[0], SRCPower[1], SRCPower[2],
+					   SRCPower[0], SRCPower[1], SRCPower[2],
+					   SRCPower[0], SRCPower[1], SRCPower[2],
+					   SRCPower[0], SRCPower[1], SRCPower[2],
+					   SRCPower[0], SRCPower[1], SRCPower[2],
+					   SRCPower[0], SRCPower[1], SRCPower[2]
+			);
 		}
 	}
 
@@ -119,8 +172,18 @@ function initBuffers() {
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
 	normalBuffer.itemSize = 3;
 	normalBuffer.numItems = normals.length/3;
-}
 
+	powerBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, powerBuffer);	
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(power), gl.STATIC_DRAW);
+	powerBuffer.itemSize = 3;
+	powerBuffer.numItems = power.length/3;
+}
+function getPowerBuffer(){
+	gl.bindBuffer(gl.ARRAY_BUFFER, powerBuffer);
+	var dataview = new DataView(powerBuffer);
+	dataview.powerBuffer;
+}
 // =====================================================
 function loadShaders(shader) {
 	loadShaderText(shader,'.vs');
@@ -184,6 +247,9 @@ function initShaders(vShaderTxt,fShaderTxt) {
 	shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
 	gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
 
+	shaderProgram.vertexPowerAttribute = gl.getAttribLocation(shaderProgram, "aVertexPower");
+	gl.enableVertexAttribArray(shaderProgram.vertexPowerAttribute);
+
 	shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
 	shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
 	shaderProgram.rMatrixUniform = gl.getUniformLocation(shaderProgram, "uRMatrix");
@@ -198,8 +264,11 @@ function initShaders(vShaderTxt,fShaderTxt) {
 		  
 	gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
 	gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute,
-	      normalBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
+		  normalBuffer.itemSize, gl.FLOAT, false, 0, 0);	
+		  
+	gl.bindBuffer(gl.ARRAY_BUFFER, powerBuffer);
+	gl.vertexAttribPointer(shaderProgram.vertexPowerAttribute, 
+		  powerBuffer.itemSize, gl.FLOAT, false, 0, 0);
 }
 
 
