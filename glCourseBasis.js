@@ -21,6 +21,7 @@ function webGLStart() {
 	document.onmousemove = handleMouseMove;
 
 	initGL(canvas);
+	initiatButtonColors();
 	buttonColors();
 	slidePower();
 	initBuffers();
@@ -56,6 +57,10 @@ function slidePower() {
 	}
 	console.log(sliderPower.value);
 	
+}
+function initiatButtonColors(){
+	document.getElementById("red1").checked = true;
+	document.getElementById("green2").checked = true;
 }
 function buttonColors() {
 	if(document.getElementById("red1").checked) {
