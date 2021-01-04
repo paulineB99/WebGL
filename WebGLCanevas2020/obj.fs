@@ -21,7 +21,7 @@ void main(void)
 	vec3 vColor = vec3(0.8,0.4,0.4);
 
 	vec3 Vi= normalize (SRCPos-vec3(pos3D));
-	col = SRCPow * vec3(vColor/PI * ddot(N,Vi));// * dot(vNormal,normalize(vec3(-pos3D))); // Lambert rendering, eye light source
+	col = SRCPow * vec3(vColor/PI * ddot(N,Vi));// Lambert rendering, eye light source
 	gl_FragColor = vec4(col,1.0);
 }
 
