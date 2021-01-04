@@ -13,6 +13,7 @@ var objMatrix = mat4.create();
 mat4.identity(objMatrix);
 var color1, color2 = [1,0,0];
 var SRCPower = [];
+var SRCPosLight = [];
 // =====================================================
 function webGLStart() {
 	var canvas = document.getElementById("WebGL-test");
@@ -25,6 +26,7 @@ function webGLStart() {
 	initiatButtonColors();
 	buttonColors();
 	slidePower();
+	slidePosLight()
 	//-----------
 	initBuffers();
 	loadShaders('shader');
@@ -58,7 +60,18 @@ function slidePower() {
 	sliderPower.oninput = function() {
 		SRCPower = [this.value, this.value, this.value];
 	}
-	console.log(sliderPower.value);
+	
+	
+}
+
+function slidePosLight() {
+	
+	var sliderPosLight = [document.getElementById("xRange"), document.getElementById("yRange"), document.getElementById("zRange")];
+	SRCPosLight = [sliderPosLight[0].value, sliderPosLight[1].value, sliderPosLight[2].value];
+	sliderPosLight.oninput = function() {
+		SRCPosLight = [this.value, this.value, this.value];
+	}
+	
 	
 }
 function initiatButtonColors(){
@@ -86,6 +99,7 @@ function buttonColors() {
 function refresh() {
 	buttonColors();
 	slidePower();
+	slidePosLight()
 	initBuffers();
 	loadShaders('shader');
 }
@@ -104,7 +118,7 @@ function setPointFromAngles(r,th, ph){
 // =====================================================
 
 function initBuffers() {
-	NB = 4;
+	NB = 20;
 	radius = 0.5;
 	dTh = Math.PI / NB;
 	dPh =dTh;
@@ -113,6 +127,7 @@ function initBuffers() {
 	colors = [];
 	normals = [];
 	power = [];
+	posLight = [];
 	for(var i=0; i<NB; i++){
 		var th1 = i*dTh;
 		var th2 = th1 + dTh;
@@ -160,6 +175,25 @@ function initBuffers() {
 					   SRCPower[0], SRCPower[1], SRCPower[2],
 					   SRCPower[0], SRCPower[1], SRCPower[2]
 			);
+			
+			posLight.push(
+			
+			/* 0.0,0.0,0.0,
+			0.0,0.0,0.0,
+			0.0,0.0,0.0,
+			0.0,0.0,0.0,
+			0.0,0.0,0.0,
+			0.0,0.0,0.0 */
+			
+			
+			
+			SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
+						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
+						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
+						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
+						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
+						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2]
+			)
 		}
 	}
 
@@ -186,6 +220,12 @@ function initBuffers() {
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(power), gl.STATIC_DRAW);
 	powerBuffer.itemSize = 3;
 	powerBuffer.numItems = power.length/3;
+	
+	posLightBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, posLightBuffer);	
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(posLight), gl.STATIC_DRAW);
+	posLightBuffer.itemSize = 3;
+	posLightBuffer.numItems = vertices.length/3;
 }
 //======================================================
 //fonction ajouter de debug -> a supprimer avant de rendre le code
@@ -259,6 +299,9 @@ function initShaders(vShaderTxt,fShaderTxt) {
 
 	shaderProgram.vertexPowerAttribute = gl.getAttribLocation(shaderProgram, "aVertexPower");
 	gl.enableVertexAttribArray(shaderProgram.vertexPowerAttribute);
+	
+	shaderProgram.vertexPosLightAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosLight");
+	gl.enableVertexAttribArray(shaderProgram.vertexPosLightAttribute);
 
 	shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
 	shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
@@ -279,6 +322,10 @@ function initShaders(vShaderTxt,fShaderTxt) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, powerBuffer);
 	gl.vertexAttribPointer(shaderProgram.vertexPowerAttribute, 
 		  powerBuffer.itemSize, gl.FLOAT, false, 0, 0);
+		  
+	gl.bindBuffer(gl.ARRAY_BUFFER, posLightBuffer);
+	gl.vertexAttribPointer(shaderProgram.vertexPosLightAttribute, 
+		  posLightBuffer.itemSize, gl.FLOAT, false, 0, 0);
 }
 
 
