@@ -177,11 +177,6 @@ function initGL(canvas)
 		gl.viewportWidth = canvas.width;
 		gl.viewportHeight = canvas.height;
 		gl.viewport(0, 0, canvas.width, canvas.height);
-
-		gl.clearColor(0.7, 0.7, 0.7, 1.0);
-		gl.enable(gl.DEPTH_TEST);
-		gl.enable(gl.CULL_FACE);
-		gl.cullFace(gl.BACK); 
 	} catch (e) {}
 	if (!gl) {
 		console.log("Could not initialise WebGL");
@@ -275,17 +270,25 @@ function webGLStart() {
 	document.onmousemove = handleMouseMove;
 	canvas.onwheel = handleMouseWheel;
 
+	//Initialisation du canvas, de plane et de l'objet + load les shader
 	initGL(canvas);
-	mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+	PLANE = new plane();
+	OBJ1 = new objmesh('bunny.obj');
 	
+	gl.clearColor(0.7, 0.7, 0.7, 1.0); // couleur du fond 
+	gl.enable(gl.DEPTH_TEST);
+	gl.enable(gl.CULL_FACE); //pas dans le code de base
+	gl.cullFace(gl.BACK);  // pas dans le code de base
+
+	//a mettre dans drawscene 
+	mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
 	mat4.identity(rotMatrix);
 	mat4.rotate(rotMatrix, rotX, [1, 0, 0]);
 	mat4.rotate(rotMatrix, rotY, [0, 0, 1]);
 
 	distCENTER = vec3.create([0,-0.2,-3]);
 	
-	PLANE = new plane();
-	OBJ1 = new objmesh('bunny.obj');
+	
 	
 	tick();
 }
@@ -294,6 +297,8 @@ function webGLStart() {
 function drawScene() {
 
 	gl.clear(gl.COLOR_BUFFER_BIT);
+
+	// add the if shaderProgram != null
 	PLANE.draw();
 	OBJ1.draw();
 }

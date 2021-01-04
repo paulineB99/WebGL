@@ -21,9 +21,11 @@ function webGLStart() {
 	document.onmousemove = handleMouseMove;
 
 	initGL(canvas);
+	// code ajouter pour les slides
 	initiatButtonColors();
 	buttonColors();
 	slidePower();
+	//-----------
 	initBuffers();
 	loadShaders('shader');
 
@@ -47,6 +49,7 @@ function initGL(canvas)
 	}
 }
 
+//----------------Ajout pour les slide et boutons----------------
 // =====================================================
 
 function slidePower() {
@@ -184,6 +187,8 @@ function initBuffers() {
 	powerBuffer.itemSize = 3;
 	powerBuffer.numItems = power.length/3;
 }
+//======================================================
+//fonction ajouter de debug -> a supprimer avant de rendre le code
 function getPowerBuffer(){
 	gl.bindBuffer(gl.ARRAY_BUFFER, powerBuffer);
 	var dataview = new DataView(powerBuffer);

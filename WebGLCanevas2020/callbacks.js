@@ -7,7 +7,7 @@ var mouseDown = false;
 var lastMouseX = null;
 var lastMouseY = null;
 var rotY = 0;
-var rotX = -1;
+var rotX = -1; 
 
 // =====================================================
 window.requestAnimFrame = (function()
@@ -37,6 +37,7 @@ function degToRad(degrees) {
 
 
 // =====================================================
+//Fonction ajouter comparer au code de base : permet de zoom
 function handleMouseWheel(event) {
 
 	distCENTER[2] += event.deltaY/10.0;
@@ -65,8 +66,8 @@ function handleMouseMove(event) {
 	var newY = event.clientY;	
 	var deltaX = newX - lastMouseX;
 	var deltaY = newY - lastMouseY;
-	
-	if(event.shiftKey) {
+	//if ajouter comparer au code de base (dans le code de base il n'y a que le else)
+	if(event.shiftKey) { //maintenir shift permet de zoom ou dézoom
 		distCENTER[2] += deltaY/100.0;
 	} else {
 

@@ -2,15 +2,26 @@
 precision mediump float;
 
 varying vec4 pos3D;
-varying vec3 N;
+varying vec3 vNormal;
+//varying vec3 vColor;
 
-
-
+const float PI = 3.14159265389793;
+// =====================================================
+float ddot(vec3 a, vec3 b){
+	return max(dot(a,b),0.0);
+}
 
 // ==============================================
 void main(void)
 {
-	vec3 col = vec3(0.8,0.4,0.4) * dot(N,normalize(vec3(-pos3D))); // Lambert rendering, eye light source
+	vec3 N = normalize(vNormal);
+	vec3 col;
+	vec3 SRCPos = vec3(0.0, 0.0, 0.0);
+	vec3 SRCPow = vec3(5.0);
+	vec3 vColor = vec3(0.8,0.4,0.4);
+
+	vec3 Vi= normalize (SRCPos-vec3(pos3D));
+	col = SRCPow * vec3(vColor/PI * ddot(N,Vi));// * dot(vNormal,normalize(vec3(-pos3D))); // Lambert rendering, eye light source
 	gl_FragColor = vec4(col,1.0);
 }
 
