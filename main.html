@@ -19,30 +19,30 @@
 	<button type="button" onclick="loadShaders('shader')">Load Shaders</button>
 	<div>
 		<label>power :</label>
-		<input type="range" min="0" max="10" value="5" class="slider" id="powerRange">
+		<input type="range" min="0" max="10" onclick="refresh()" value="5" class="slider" id="powerRange">
 		
 	</div>
 	<div>
 		<label>Couleur 1 :</label>
 		<form id="color1">
-			<input type="radio" id="red1" name="color1" value="red">
+			<input type="radio" id="red1" onclick="refresh()" name="color1" value="red">
 			<label for="red"> Red </label><br>
-			<input type="radio" id="green1" name="color1" value="green">
+			<input type="radio" id="green1" onclick="refresh()" name="color1" value="green">
 			<label for="green"> Green </label><br>
-			<input type="radio" id="blue1" name="color1" value="blue">
+			<input type="radio" id="blue1" onclick="refresh()" name="color1" value="blue">
 			<label for="blue"> Blue </label><br>
 		</form>
 		<label>Couleur 2 :</label>
 		<form id="color2">
-			<input type="radio" id="red2" name="color2" value="red">
+			<input type="radio" id="red2" onclick="refresh()" name="color2" value="red">
 			<label for="red"> Red </label><br>
-			<input type="radio" id="green2" name="color2" value="green">
+			<input type="radio" id="green2" onclick="refresh()" name="color2" value="green">
 			<label for="green"> Green </label><br>
-			<input type="radio" id="blue2" name="color2" value="blue">
+			<input type="radio" id="blue2" onclick="refresh()" name="color2" value="blue">
 			<label for="blue"> Blue </label><br>
 		</form>
 	</div>
-	<button type="button" onclick="refresh()">Refresh</button>
+	
 </body>
 
 
