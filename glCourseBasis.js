@@ -106,7 +106,7 @@ function buttonColors() {
 		colorLight = [1,1,1];
 		specularLight = [1,1,1];
 	}
-	initBuffers();
+	gl.clearColor(0.7*colorLight[0], 0.7*colorLight[1], 0.7*colorLight[2], 1.0);
 }
 
 
