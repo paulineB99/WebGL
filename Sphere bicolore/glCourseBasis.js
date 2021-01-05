@@ -105,6 +105,12 @@ function buttonColors() {
 	}else if(document.getElementById("whiteLight").checked) {
 		colorLight = [1,1,1];
 		specularLight = [1,1,1];
+	}else if(document.getElementById("hotLight").checked) {
+		colorLight = [1,0.9,0.7];
+		specularLight = [1,0.6,0.5];
+	}else if(document.getElementById("coldLight").checked) {
+		colorLight = [0.7,0.9,1];
+		specularLight = [0.5,0.6,1];
 	}
 	gl.clearColor(0.7*colorLight[0], 0.7*colorLight[1], 0.7*colorLight[2], 1.0);
 }
