@@ -141,7 +141,7 @@ function initBuffers() {
 	vertices = [];
 	colors = [];
 	normals = [];
-	power = [];
+	
 	posLight = [];
 	colLight = [];
 	speLight = [];
@@ -185,12 +185,7 @@ function initBuffers() {
 						color2[0], color2[1], color2[2]
 				);
 			
-			power.push(SRCPower[0], SRCPower[1], SRCPower[2],
-					   SRCPower[0], SRCPower[1], SRCPower[2],
-					   SRCPower[0], SRCPower[1], SRCPower[2],
-					   SRCPower[0], SRCPower[1], SRCPower[2],
-					   SRCPower[0], SRCPower[1], SRCPower[2],
-					   SRCPower[0], SRCPower[1], SRCPower[2]);
+			
 			
 			posLight.push(SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
 						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
@@ -233,11 +228,7 @@ function initBuffers() {
 	normalBuffer.itemSize = 3;
 	normalBuffer.numItems = normals.length/3;
 
-	powerBuffer = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, powerBuffer);	
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(power), gl.STATIC_DRAW);
-	powerBuffer.itemSize = 3;
-	powerBuffer.numItems = power.length/3;
+	
 	
 	posLightBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, posLightBuffer);	
@@ -327,8 +318,8 @@ function initShaders(vShaderTxt,fShaderTxt) {
 	shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
 	gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
 
-	shaderProgram.vertexPowerAttribute = gl.getAttribLocation(shaderProgram, "aVertexPower");
-	gl.enableVertexAttribArray(shaderProgram.vertexPowerAttribute);
+	shaderProgram.SRCPowUniform = gl.getUniformLocation(shaderProgram, "aVertexPower");
+	gl.uniform3fv(shaderProgram.SRCPowUniform, SRCPower);
 	
 	shaderProgram.vertexPosLightAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosLight");
 	gl.enableVertexAttribArray(shaderProgram.vertexPosLightAttribute);
@@ -355,9 +346,6 @@ function initShaders(vShaderTxt,fShaderTxt) {
 	gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute,
 		  normalBuffer.itemSize, gl.FLOAT, false, 0, 0);	
 		  
-	gl.bindBuffer(gl.ARRAY_BUFFER, powerBuffer);
-	gl.vertexAttribPointer(shaderProgram.vertexPowerAttribute, 
-		  powerBuffer.itemSize, gl.FLOAT, false, 0, 0);
 		  
 	gl.bindBuffer(gl.ARRAY_BUFFER, posLightBuffer);
 	gl.vertexAttribPointer(shaderProgram.vertexPosLightAttribute, 

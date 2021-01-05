@@ -2,7 +2,8 @@
 attribute vec3 aVertexPosition;
 attribute vec3 aVertexNormal;
 attribute vec3 aVertexColor;
-attribute vec3 aVertexPower;
+
+uniform vec3 aVertexPower;
 attribute vec3 aVertexPosLight;
 attribute vec3 aVertexColorLight;
 attribute vec3 aVertexSpecularLight;

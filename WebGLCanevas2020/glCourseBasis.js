@@ -125,7 +125,7 @@ class objmesh {
 		this.shader.mvMatrixUniform = gl.getUniformLocation(this.shader, "uMVMatrix");
 		this.shader.pMatrixUniform = gl.getUniformLocation(this.shader, "uPMatrix");
 		
-		gl.uniform3fv(this.shader.SRCPowUniform, powLight);
+		
 		
 		gl.uniform3fv(this.shader.colorUniform, color);
 		gl.uniform3fv(this.shader.SRCColUniform, colorLight);
