@@ -25,6 +25,6 @@ void main(void) {
 	vec3 Vi= normalize (vSRCpos-vPosition);
 	col = vSRCPower * vec3(vColor/PI * ddot(N,Vi));
 	gl_FragColor = vec4(col, 1.0);
-	gl_FragColor.rgb *= vSRC_lightColor * dot(N, Vi) * (vSRCPower/vec3(10));
-	gl_FragColor.rgb += vSRC_specularColor * dot(N, Vi) * (vSRCPower/vec3(10));
+	gl_FragColor.rgb *= vSRC_lightColor * ddot(N, Vi) * (vSRCPower/vec3(10));
+	gl_FragColor.rgb += vSRC_specularColor * ddot(N, Vi) * (vSRCPower/vec3(10));
 }

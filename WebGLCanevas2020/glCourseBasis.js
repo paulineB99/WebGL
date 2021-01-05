@@ -7,7 +7,10 @@ var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
 var rotMatrix = mat4.create();
 var distCENTER;
-var powLight = [5,0,0];
+var powLight = [5,5,5];
+var color = [1,0,0];
+var colorLight = [1,1,1];
+var specularLight = [1,1,1];
 
 // =====================================================
 
@@ -18,6 +21,8 @@ var PLANE = null;
 // =====================================================
 // OBJET 3D, lecture fichier obj
 // =====================================================
+
+//------ Code ajouter pour la personalisation des paramètres ------
 function slidePower() {
  var sliderPower = document.getElementById("powerRange");
 	powLight = [sliderPower.value, sliderPower.value, sliderPower.value];
@@ -26,11 +31,37 @@ function slidePower() {
 	} 
 }
 	
-	
-	
+function initiatButtonColors(){
+	document.getElementById("red").checked = true;
+	document.getElementById("whiteLight").checked = true;
+}
+
+function buttonColors() {
+	if(document.getElementById("red").checked) {
+		color = [1,0,0];
+	}else if(document.getElementById("green").checked) {
+		color = [0,1,0];
+	}else if(document.getElementById("blue").checked) {
+		color = [0,0,1];
+	}
+
+	if(document.getElementById("redLight").checked) {
+		colorLight = [1,0.6,0.6];
+		specularLight = [1,0.2,0.2];
+	}else if(document.getElementById("greenLight").checked) {
+		colorLight = [0.4,1,0.4];
+		specularLight = [0.2,1,0.2];
+	}else if(document.getElementById("blueLight").checked) {
+		colorLight = [0.6,0.6,0.8];
+		specularLight = [0.1,0.1,0.8];
+	}else if(document.getElementById("whiteLight").checked) {
+		colorLight = [1,1,1];
+		specularLight = [1,1,1];
+	}
+}	
 
 function refresh() {
-		
+	buttonColors();
 	slidePower();
 		
 	loadShaders(this);
@@ -73,11 +104,20 @@ class objmesh {
 		
 		this.shader.SRCPowUniform = gl.getUniformLocation(this.shader, "aVertexPower");
 		
+		this.shader.colorUniform = gl.getUniformLocation(this.shader, "aVertexColor");
+		this.shader.SRCColUniform = gl.getUniformLocation(this.shader, "aVertexSRCCol");
+		this.shader.speColUniform = gl.getUniformLocation(this.shader, "aVertexSpeCol");
+		
 		this.shader.rMatrixUniform = gl.getUniformLocation(this.shader, "uRMatrix");
 		this.shader.mvMatrixUniform = gl.getUniformLocation(this.shader, "uMVMatrix");
 		this.shader.pMatrixUniform = gl.getUniformLocation(this.shader, "uPMatrix");
 		
 		gl.uniform3fv(this.shader.SRCPowUniform, powLight);
+		
+		gl.uniform3fv(this.shader.colorUniform, color);
+		gl.uniform3fv(this.shader.SRCColUniform, colorLight);
+		gl.uniform3fv(this.shader.speColUniform, specularLight);
+		
 	}
 	
 	// --------------------------------------------
@@ -302,6 +342,7 @@ function webGLStart() {
 
 	//Initialisation du canvas, de plane et de l'objet + load les shader
 	initGL(canvas);
+	initiatButtonColors();
 	PLANE = new plane();
 	OBJ1 = new objmesh('bunny.obj');
 	
