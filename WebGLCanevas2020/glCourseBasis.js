@@ -59,6 +59,7 @@ function buttonColors() {
 		colorLight = [1,1,1];
 		specularLight = [1,1,1];
 	}
+	gl.clearColor(0.7*colorLight[0], 0.7*colorLight[1], 0.7*colorLight[2], 1.0);
 }	
 function slidePosLight() {
 	var sliderPosLight = [document.getElementById("xSRCPos"), document.getElementById("ySRCPos"), document.getElementById("zSRCPos")];
