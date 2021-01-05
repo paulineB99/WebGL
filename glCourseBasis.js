@@ -141,10 +141,7 @@ function initBuffers() {
 	vertices = [];
 	colors = [];
 	normals = [];
-	
-	posLight = [];
-	colLight = [];
-	speLight = [];
+
 	for(var i=0; i<NB; i++){
 		var th1 = i*dTh;
 		var th2 = th1 + dTh;
@@ -184,29 +181,7 @@ function initBuffers() {
 						color2[0], color2[1], color2[2],
 						color2[0], color2[1], color2[2]
 				);
-			
-			
-			
-			posLight.push(SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
-						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
-						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
-						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
-						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
-						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2]);
-			
-			colLight.push(colorLight[0], colorLight[1], colorLight[2],
-						  colorLight[0], colorLight[1], colorLight[2],
-						  colorLight[0], colorLight[1], colorLight[2],
-						  colorLight[0], colorLight[1], colorLight[2],
-						  colorLight[0], colorLight[1], colorLight[2],
-						  colorLight[0], colorLight[1], colorLight[2]);
-
-			speLight.push(specularLight[0], specularLight[1], specularLight[2],
-						  specularLight[0], specularLight[1], specularLight[2],
-						  specularLight[0], specularLight[1], specularLight[2],
-						  specularLight[0], specularLight[1], specularLight[2],
-						  specularLight[0], specularLight[1], specularLight[2],
-						  specularLight[0], specularLight[1], specularLight[2]);
+	
 		}
 	}
 
@@ -228,25 +203,6 @@ function initBuffers() {
 	normalBuffer.itemSize = 3;
 	normalBuffer.numItems = normals.length/3;
 
-	
-	
-	posLightBuffer = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, posLightBuffer);	
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(posLight), gl.STATIC_DRAW);
-	posLightBuffer.itemSize = 3;
-	posLightBuffer.numItems = posLight.length/3;
-
-	colLightBuffer = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, colLightBuffer);
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colLight), gl.STATIC_DRAW);
-	colLightBuffer.itemSize = 3;
-	colLightBuffer.numItems = colLightBuffer/3;
-
-	speLightBuffer = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, speLightBuffer);
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(speLight), gl.STATIC_DRAW);
-	speLightBuffer.itemSize = 3;
-	speLightBuffer.numItems = speLightBuffer/3;
 }
 //======================================================
 //fonction ajouter de debug -> a supprimer avant de rendre le code
@@ -321,14 +277,16 @@ function initShaders(vShaderTxt,fShaderTxt) {
 	shaderProgram.SRCPowUniform = gl.getUniformLocation(shaderProgram, "aVertexPower");
 	gl.uniform3fv(shaderProgram.SRCPowUniform, SRCPower);
 	
-	shaderProgram.vertexPosLightAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosLight");
-	gl.enableVertexAttribArray(shaderProgram.vertexPosLightAttribute);
+	
+	
+	shaderProgram.SRCPosUniform = gl.getUniformLocation(shaderProgram, "aVertexPosLight");
+	gl.uniform3fv(shaderProgram.SRCPosUniform, SRCPosLight);
 
-	shaderProgram.vertexColLightAttribute = gl.getAttribLocation(shaderProgram, "aVertexColorLight");
-	gl.enableVertexAttribArray(shaderProgram.vertexColLightAttribute);
+	shaderProgram.SRCColUniform = gl.getUniformLocation(shaderProgram, "aVertexColorLight");
+	gl.uniform3fv(shaderProgram.SRCColUniform, colorLight);
 
-	shaderProgram.vertexSpeLightAttribute = gl.getAttribLocation(shaderProgram, "aVertexSpecularLight");
-	gl.enableVertexAttribArray(shaderProgram.vertexSpeLightAttribute);
+	shaderProgram.speColUniform = gl.getUniformLocation(shaderProgram, "aVertexSpecularLight");
+	gl.uniform3fv(shaderProgram.speColUniform, specularLight);
 
 	shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
 	shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
@@ -345,20 +303,7 @@ function initShaders(vShaderTxt,fShaderTxt) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
 	gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute,
 		  normalBuffer.itemSize, gl.FLOAT, false, 0, 0);	
-		  
-		  
-	gl.bindBuffer(gl.ARRAY_BUFFER, posLightBuffer);
-	gl.vertexAttribPointer(shaderProgram.vertexPosLightAttribute, 
-		  posLightBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-	gl.bindBuffer(gl.ARRAY_BUFFER, colLightBuffer);
-	gl.vertexAttribPointer(shaderProgram.vertexColLightAttribute,
-		  colLightBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-	gl.bindBuffer(gl.ARRAY_BUFFER, speLightBuffer);
-	gl.vertexAttribPointer(shaderProgram.vertexSpeLightAttribute,
-		  speLightBuffer.itemSize, gl.FLOAT, false, 0, 0);
-	  
 }
 
 

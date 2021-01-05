@@ -4,9 +4,9 @@ attribute vec3 aVertexNormal;
 attribute vec3 aVertexColor;
 
 uniform vec3 aVertexPower;
-attribute vec3 aVertexPosLight;
-attribute vec3 aVertexColorLight;
-attribute vec3 aVertexSpecularLight;
+uniform vec3 aVertexPosLight;
+uniform vec3 aVertexColorLight;
+uniform vec3 aVertexSpecularLight;
 
 uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
