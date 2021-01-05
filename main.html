@@ -57,6 +57,19 @@
 		<input type="range" min="-5" max="5" onclick="refresh()" value="0" class="slider" id="zRange">
 		
 	</div>
+	<div>
+		<label>Couleur lumiere :</label>
+		<form id="colLight">
+			<input type="radio" id="whiteLight" onclick="refresh()" name="colLight" value="white">
+			<label for="white"> White </label><br>
+			<input type="radio" id="redLight" onclick="refresh()" name="colLight" value="red">
+			<label for="red"> Red </label><br>
+			<input type="radio" id="greenLight" onclick="refresh()" name="colLight" value="green">
+			<label for="green"> Green </label><br>
+			<input type="radio" id="blueLight" onclick="refresh()" name="colLight" value="blue">
+			<label for="blue"> Blue </label><br>
+		</form>
+	</div>
 	
 </body>
 

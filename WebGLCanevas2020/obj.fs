@@ -4,6 +4,7 @@ precision mediump float;
 varying vec4 pos3D;
 varying vec3 vNormal;
 //varying vec3 vColor;
+//varying vec3 SRCPos;
 
 const float PI = 3.14159265389793;
 // =====================================================
@@ -23,6 +24,8 @@ void main(void)
 	vec3 Vi= normalize (SRCPos-vec3(pos3D));
 	col = SRCPow * vec3(vColor/PI * ddot(N,Vi));// Lambert rendering, eye light source
 	gl_FragColor = vec4(col,1.0);
+	gl_FragColor.rgb *= vec3(1, 0.6, 0.6) * dot(N, Vi);
+	gl_FragColor.rgb += vec3 (1, 0.2, 0.2) * dot(N, Vi);
 }
 
 
