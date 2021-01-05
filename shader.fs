@@ -6,6 +6,8 @@ varying vec3 vNormal;
 varying vec3 vColor;
 varying vec3 vSRCPower;
 varying vec3 vSRCpos;
+varying vec3 vSRC_lightColor;
+varying vec3 vSRC_specularColor;
 const float PI = 3.14159265389793;
 // =====================================================
 float ddot(vec3 a, vec3 b){
@@ -23,4 +25,6 @@ void main(void) {
 	vec3 Vi= normalize (vSRCpos-vPosition);
 	col = vSRCPower * vec3(vColor/PI * ddot(N,Vi));
 	gl_FragColor = vec4(col, 1.0);
+	gl_FragColor.rgb *= vSRC_lightColor * dot(N, Vi) * (vSRCPower/vec3(10));
+	gl_FragColor.rgb += vSRC_specularColor * dot(N, Vi) * (vSRCPower/vec3(10));
 }

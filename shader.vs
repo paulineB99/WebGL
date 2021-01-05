@@ -4,6 +4,8 @@ attribute vec3 aVertexNormal;
 attribute vec3 aVertexColor;
 attribute vec3 aVertexPower;
 attribute vec3 aVertexPosLight;
+attribute vec3 aVertexColorLight;
+attribute vec3 aVertexSpecularLight;
 
 uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
@@ -14,8 +16,12 @@ varying vec3 vNormal;
 varying vec3 vColor;
 varying vec3 vSRCPower;
 varying vec3 vSRCpos;
+varying vec3 vSRC_lightColor;
+varying vec3 vSRC_specularColor;
 
 void main(void) {
+	vSRC_lightColor =vec3(aVertexColorLight[0], aVertexColorLight[1], aVertexColorLight[2]);
+	vSRC_specularColor = vec3(aVertexSpecularLight[0], aVertexSpecularLight[1], aVertexSpecularLight[2]);
 	vColor = aVertexColor;
 	vPosition = vec3(uMVMatrix * vec4(aVertexPosition,1.0));
 	vNormal = vec3(uRMatrix*vec4(aVertexNormal,1.0));

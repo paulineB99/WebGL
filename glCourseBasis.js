@@ -12,6 +12,7 @@ var pMatrix = mat4.create();
 var objMatrix = mat4.create();
 mat4.identity(objMatrix);
 var color1, color2 = [1,0,0];
+var colorLight, specularLight = [1,1,1];
 var SRCPower = [];
 var SRCPosLight = [];
 // =====================================================
@@ -26,7 +27,8 @@ function webGLStart() {
 	initiatButtonColors();
 	buttonColors();
 	slidePower();
-	slidePosLight()
+	slidePosLight();
+	
 	//-----------
 	initBuffers();
 	loadShaders('shader');
@@ -60,24 +62,22 @@ function slidePower() {
 	sliderPower.oninput = function() {
 		SRCPower = [this.value, this.value, this.value];
 	}
-	
-	
 }
 
 function slidePosLight() {
-	
 	var sliderPosLight = [document.getElementById("xRange"), document.getElementById("yRange"), document.getElementById("zRange")];
 	SRCPosLight = [sliderPosLight[0].value, sliderPosLight[1].value, sliderPosLight[2].value];
 	sliderPosLight.oninput = function() {
 		SRCPosLight = [this.value, this.value, this.value];
-	}
-	
-	
+	}	
 }
+
 function initiatButtonColors(){
 	document.getElementById("red1").checked = true;
 	document.getElementById("green2").checked = true;
+	document.getElementById("whiteLight").checked = true;
 }
+
 function buttonColors() {
 	if(document.getElementById("red1").checked) {
 		color1 = [1,0,0];
@@ -93,13 +93,28 @@ function buttonColors() {
 	}else if(document.getElementById("blue2").checked) {
 		color2 = [0,0,1];
 	}
+	if(document.getElementById("redLight").checked) {
+		colorLight = [1,0.6,0.6];
+		specularLight = [1,0.2,0.2];
+	}else if(document.getElementById("greenLight").checked) {
+		colorLight = [0.4,1,0.4];
+		specularLight = [0.2,1,0.2];
+	}else if(document.getElementById("blueLight").checked) {
+		colorLight = [0.6,0.6,0.8];
+		specularLight = [0.1,0.1,0.8];
+	}else if(document.getElementById("whiteLight").checked) {
+		colorLight = [1,1,1];
+		specularLight = [1,1,1];
+	}
 	initBuffers();
 }
+
 
 function refresh() {
 	buttonColors();
 	slidePower();
 	slidePosLight();
+	
 	initBuffers();
 	loadShaders('shader');
 }
@@ -128,6 +143,8 @@ function initBuffers() {
 	normals = [];
 	power = [];
 	posLight = [];
+	colLight = [];
+	speLight = [];
 	for(var i=0; i<NB; i++){
 		var th1 = i*dTh;
 		var th2 = th1 + dTh;
@@ -173,18 +190,28 @@ function initBuffers() {
 					   SRCPower[0], SRCPower[1], SRCPower[2],
 					   SRCPower[0], SRCPower[1], SRCPower[2],
 					   SRCPower[0], SRCPower[1], SRCPower[2],
-					   SRCPower[0], SRCPower[1], SRCPower[2]
-			);
+					   SRCPower[0], SRCPower[1], SRCPower[2]);
 			
-			posLight.push(
-	
-			SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
+			posLight.push(SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
 						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
 						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
 						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
 						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
-						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2]
-			)
+						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2]);
+			
+			colLight.push(colorLight[0], colorLight[1], colorLight[2],
+						  colorLight[0], colorLight[1], colorLight[2],
+						  colorLight[0], colorLight[1], colorLight[2],
+						  colorLight[0], colorLight[1], colorLight[2],
+						  colorLight[0], colorLight[1], colorLight[2],
+						  colorLight[0], colorLight[1], colorLight[2]);
+
+			speLight.push(specularLight[0], specularLight[1], specularLight[2],
+						  specularLight[0], specularLight[1], specularLight[2],
+						  specularLight[0], specularLight[1], specularLight[2],
+						  specularLight[0], specularLight[1], specularLight[2],
+						  specularLight[0], specularLight[1], specularLight[2],
+						  specularLight[0], specularLight[1], specularLight[2]);
 		}
 	}
 
@@ -216,7 +243,19 @@ function initBuffers() {
 	gl.bindBuffer(gl.ARRAY_BUFFER, posLightBuffer);	
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(posLight), gl.STATIC_DRAW);
 	posLightBuffer.itemSize = 3;
-	posLightBuffer.numItems = vertices.length/3;
+	posLightBuffer.numItems = posLight.length/3;
+
+	colLightBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, colLightBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colLight), gl.STATIC_DRAW);
+	colLightBuffer.itemSize = 3;
+	colLightBuffer.numItems = colLightBuffer/3;
+
+	speLightBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, speLightBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(speLight), gl.STATIC_DRAW);
+	speLightBuffer.itemSize = 3;
+	speLightBuffer.numItems = speLightBuffer/3;
 }
 //======================================================
 //fonction ajouter de debug -> a supprimer avant de rendre le code
@@ -294,6 +333,12 @@ function initShaders(vShaderTxt,fShaderTxt) {
 	shaderProgram.vertexPosLightAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosLight");
 	gl.enableVertexAttribArray(shaderProgram.vertexPosLightAttribute);
 
+	shaderProgram.vertexColLightAttribute = gl.getAttribLocation(shaderProgram, "aVertexColorLight");
+	gl.enableVertexAttribArray(shaderProgram.vertexColLightAttribute);
+
+	shaderProgram.vertexSpeLightAttribute = gl.getAttribLocation(shaderProgram, "aVertexSpecularLight");
+	gl.enableVertexAttribArray(shaderProgram.vertexSpeLightAttribute);
+
 	shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
 	shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
 	shaderProgram.rMatrixUniform = gl.getUniformLocation(shaderProgram, "uRMatrix");
@@ -317,6 +362,15 @@ function initShaders(vShaderTxt,fShaderTxt) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, posLightBuffer);
 	gl.vertexAttribPointer(shaderProgram.vertexPosLightAttribute, 
 		  posLightBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+	gl.bindBuffer(gl.ARRAY_BUFFER, colLightBuffer);
+	gl.vertexAttribPointer(shaderProgram.vertexColLightAttribute,
+		  colLightBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+	gl.bindBuffer(gl.ARRAY_BUFFER, speLightBuffer);
+	gl.vertexAttribPointer(shaderProgram.vertexSpeLightAttribute,
+		  speLightBuffer.itemSize, gl.FLOAT, false, 0, 0);
+	  
 }
 
 
