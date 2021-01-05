@@ -177,16 +177,7 @@ function initBuffers() {
 			);
 			
 			posLight.push(
-			
-			/* 0.0,0.0,0.0,
-			0.0,0.0,0.0,
-			0.0,0.0,0.0,
-			0.0,0.0,0.0,
-			0.0,0.0,0.0,
-			0.0,0.0,0.0 */
-			
-			
-			
+	
 			SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
 						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
 						  SRCPosLight[0], SRCPosLight[1], SRCPosLight[2],
