@@ -7,7 +7,7 @@ var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
 var rotMatrix = mat4.create();
 var distCENTER;
-var powLight = [2,0,0];
+var powLight = [5,0,0];
 
 // =====================================================
 
