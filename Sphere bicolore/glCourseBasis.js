@@ -97,11 +97,11 @@ function buttonColors() {
 		colorLight = [1,0.6,0.6];
 		specularLight = [1,0.2,0.2];
 	}else if(document.getElementById("greenLight").checked) {
-		colorLight = [0.4,1,0.4];
+		colorLight = [0.6,1,0.6];
 		specularLight = [0.2,1,0.2];
 	}else if(document.getElementById("blueLight").checked) {
-		colorLight = [0.6,0.6,0.8];
-		specularLight = [0.1,0.1,0.8];
+		colorLight = [0.6,0.6,1];
+		specularLight = [0.2,0.2,1];
 	}else if(document.getElementById("whiteLight").checked) {
 		colorLight = [1,1,1];
 		specularLight = [1,1,1];
