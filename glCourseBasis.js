@@ -99,7 +99,7 @@ function buttonColors() {
 function refresh() {
 	buttonColors();
 	slidePower();
-	slidePosLight()
+	slidePosLight();
 	initBuffers();
 	loadShaders('shader');
 }

@@ -7,6 +7,8 @@ var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
 var rotMatrix = mat4.create();
 var distCENTER;
+var powLight = [2,0,0];
+
 // =====================================================
 
 var OBJ1 = null;
@@ -16,6 +18,24 @@ var PLANE = null;
 // =====================================================
 // OBJET 3D, lecture fichier obj
 // =====================================================
+function slidePower() {
+ var sliderPower = document.getElementById("powerRange");
+	powLight = [sliderPower.value, sliderPower.value, sliderPower.value];
+	sliderPower.oninput = function() {
+		powLight = [this.value, this.value, this.value];
+	} 
+}
+	
+	
+	
+
+function refresh() {
+		
+	slidePower();
+		
+	loadShaders(this);
+}
+
 
 class objmesh {
 
@@ -30,11 +50,17 @@ class objmesh {
 		loadObjFile(this);
 		loadShaders(this);
 	}
+	
+	
+	
+
 
 	// --------------------------------------------
 	setShadersParams() {
 		gl.useProgram(this.shader);
-
+		
+		
+		
 		this.shader.vAttrib = gl.getAttribLocation(this.shader, "aVertexPosition");
 		gl.enableVertexAttribArray(this.shader.vAttrib);
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh.vertexBuffer);
@@ -44,10 +70,14 @@ class objmesh {
 		gl.enableVertexAttribArray(this.shader.nAttrib);
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh.normalBuffer);
 		gl.vertexAttribPointer(this.shader.nAttrib, this.mesh.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
+		
+		this.shader.SRCPowUniform = gl.getUniformLocation(this.shader, "aVertexPower");
+		
 		this.shader.rMatrixUniform = gl.getUniformLocation(this.shader, "uRMatrix");
 		this.shader.mvMatrixUniform = gl.getUniformLocation(this.shader, "uMVMatrix");
 		this.shader.pMatrixUniform = gl.getUniformLocation(this.shader, "uPMatrix");
+		
+		gl.uniform3fv(this.shader.SRCPowUniform, powLight);
 	}
 	
 	// --------------------------------------------
@@ -124,7 +154,7 @@ class plane {
 	// --------------------------------------------
 	setShadersParams() {
 		gl.useProgram(this.shader);
-
+		
 		this.shader.vAttrib = gl.getAttribLocation(this.shader, "aVertexPosition");
 		gl.enableVertexAttribArray(this.shader.vAttrib);
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.vBuffer);
@@ -279,6 +309,8 @@ function webGLStart() {
 	gl.enable(gl.DEPTH_TEST);
 	gl.enable(gl.CULL_FACE); //pas dans le code de base
 	gl.cullFace(gl.BACK);  // pas dans le code de base
+
+	
 
 	//a mettre dans drawscene 
 	mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
