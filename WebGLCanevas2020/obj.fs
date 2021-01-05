@@ -7,6 +7,7 @@ varying vec3 vColor;
 varying vec3 SRCPow;
 varying vec3 SRCCol;
 varying vec3 speCol;
+varying vec3 SRCPos;
 
 const float PI = 3.14159265389793;
 // =====================================================
@@ -19,7 +20,7 @@ void main(void)
 {
 	vec3 N = normalize(vNormal);
 	vec3 col;
-	vec3 SRCPos = vec3(0.0, 0.0, 0.0);
+	//vec3 SRCPos = vec3(0.0, 0.0, 0.0);
 	//vec3 SRCPow = vec3(5.0);
 	//vec3 vColor = vec3(0.8,0.4,0.4);
 	//vec3 SRCCol = vec3(1,1,1);

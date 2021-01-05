@@ -12,6 +12,7 @@ var color = [1,0,0];
 var colorLight = [1,1,1];
 var specularLight = [1,1,1];
 
+var SRCpos = [0,0,0];
 // =====================================================
 
 var OBJ1 = null;
@@ -59,11 +60,19 @@ function buttonColors() {
 		specularLight = [1,1,1];
 	}
 }	
+function slidePosLight() {
+	var sliderPosLight = [document.getElementById("xSRCPos"), document.getElementById("ySRCPos"), document.getElementById("zSRCPos")];
+	SRCpos = [sliderPosLight[0].value, sliderPosLight[1].value, sliderPosLight[2].value];
+	sliderPosLight.oninput = function() {
+		SRCpos = [this.value, this.value, this.value];
+	}	
+}	
+	
 
 function refresh() {
 	buttonColors();
 	slidePower();
-		
+	slidePosLight();	
 	loadShaders(this);
 }
 
@@ -103,6 +112,10 @@ class objmesh {
 		gl.vertexAttribPointer(this.shader.nAttrib, this.mesh.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
 		
 		this.shader.SRCPowUniform = gl.getUniformLocation(this.shader, "aVertexPower");
+		gl.uniform3fv(this.shader.SRCPowUniform, powLight);
+		
+		this.shader.SRCPosUniform = gl.getUniformLocation(this.shader, "aPosLight");
+		gl.uniform3fv(this.shader.SRCPosUniform, SRCpos);
 		
 		this.shader.colorUniform = gl.getUniformLocation(this.shader, "aVertexColor");
 		this.shader.SRCColUniform = gl.getUniformLocation(this.shader, "aVertexSRCCol");
@@ -117,6 +130,7 @@ class objmesh {
 		gl.uniform3fv(this.shader.colorUniform, color);
 		gl.uniform3fv(this.shader.SRCColUniform, colorLight);
 		gl.uniform3fv(this.shader.speColUniform, specularLight);
+		
 		
 	}
 	
@@ -345,6 +359,7 @@ function webGLStart() {
 	initiatButtonColors();
 	PLANE = new plane();
 	OBJ1 = new objmesh('bunny.obj');
+	refresh();
 	
 	gl.clearColor(0.7, 0.7, 0.7, 1.0); // couleur du fond 
 	gl.enable(gl.DEPTH_TEST);
